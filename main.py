@@ -105,6 +105,7 @@ class LookupWorker(QRunnable):
 
 
 def load_env_file(path: str = ENV_FILE):
+    path = app_path(path)
     if not os.path.exists(path):
         return
 
@@ -120,7 +121,22 @@ def load_env_file(path: str = ENV_FILE):
 
 
 def app_path(filename: str) -> str:
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
+    if getattr(sys, "frozen", False):
+        base_dir = os.path.dirname(sys.executable)
+    else:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    candidate = os.path.join(base_dir, filename)
+    if os.path.exists(candidate):
+        return candidate
+
+    bundled_dir = getattr(sys, "_MEIPASS", "")
+    if bundled_dir:
+        bundled_candidate = os.path.join(bundled_dir, filename)
+        if os.path.exists(bundled_candidate):
+            return bundled_candidate
+
+    return candidate
 
 
 def get_api_key() -> str:

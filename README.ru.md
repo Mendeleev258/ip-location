@@ -11,20 +11,38 @@
 
 При запуске приложение определяет текущий публичный IP, отправляет его в `ipgeolocationio` и показывает локацию, часовой пояс, провайдера, организацию, координаты и флаг страны, если он доступен.
 
-## Требования
+## Windows-релиз
+
+Для Windows скачайте готовую сборку из GitHub Releases:
+
+1. Скачайте `IP-Location-Windows.zip`.
+2. Распакуйте архив в любую локальную папку.
+3. Откройте `.env` в распакованной папке `IP Location`.
+4. Укажите свой `IPGEOLOCATION_API_KEY`.
+5. Запустите `IP Location.exe`.
+
+Папку после распаковки нужно держать целиком. Исполняемый файл использует `_internal/`, `.env` и `style.qss`, которые лежат рядом с ним.
+
+Пример `.env` для Windows-сборки:
+
+```env
+IPGEOLOCATION_API_KEY=your_api_key_here
+CURRENT_IP_ENDPOINT=https://api.ipify.org
+FLAG_IMAGE_ENDPOINT_TEMPLATE=https://flagcdn.com/w80/{country_code}.png
+```
+
+## Запуск из исходников
+
+Этот способ нужен, если вы хотите запускать или изменять Python-код.
+
+### Требования
 
 - Python 3.10 или новее
 - Доступ в интернет
 - API-ключ `ipgeolocationio`
 - Поддержка десктопных окон Qt/PySide6 в системе
 
-Python-зависимости:
-
-```bash
-pip install PySide6 ipgeolocation
-```
-
-Если в системе установлено несколько версий Python, используйте запуск через нужный интерпретатор:
+Установите Python-зависимости:
 
 ```bash
 python -m pip install PySide6 ipgeolocation
@@ -32,7 +50,7 @@ python -m pip install PySide6 ipgeolocation
 
 На Linux убедитесь, что приложение запускается в графической сессии и доступны зависимости Qt. На минимальных серверных образах для PySide6 могут понадобиться дополнительные системные пакеты для X11 или Wayland.
 
-## Настройка
+### Настройка
 
 Создайте локальный файл `.env` из примера:
 
@@ -64,7 +82,7 @@ FLAG_IMAGE_ENDPOINT_TEMPLATE=https://flagcdn.com/w80/{country_code}.png
 
 Храните `.env` приватно. В нём находится API-ключ, поэтому этот файл не нужно коммитить.
 
-## Запуск
+### Запуск
 
 Из директории проекта:
 

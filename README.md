@@ -11,20 +11,38 @@ Desktop application for looking up an IP address location with a PySide6 interfa
 
 The app detects the current public IP on startup, sends it to `ipgeolocationio`, and displays location, timezone, ISP, organization, coordinates, and a country flag when available.
 
-## Requirements
+## Windows Release
+
+For Windows, download the release archive from GitHub Releases:
+
+1. Download `IP-Location-Windows.zip`.
+2. Extract the archive to any local folder.
+3. Open `.env` in the extracted `IP Location` folder.
+4. Set your `IPGEOLOCATION_API_KEY`.
+5. Run `IP Location.exe`.
+
+The extracted folder must stay together. The executable depends on `_internal/`, `.env`, and `style.qss` located next to it.
+
+Example `.env` for the Windows build:
+
+```env
+IPGEOLOCATION_API_KEY=your_api_key_here
+CURRENT_IP_ENDPOINT=https://api.ipify.org
+FLAG_IMAGE_ENDPOINT_TEMPLATE=https://flagcdn.com/w80/{country_code}.png
+```
+
+## Run From Source
+
+Use this path if you want to run or modify the Python source code.
+
+### Requirements
 
 - Python 3.10 or newer
 - Internet access
 - An `ipgeolocationio` API key
 - System support for Qt/PySide6 desktop windows
 
-Python dependencies:
-
-```bash
-pip install PySide6 ipgeolocation
-```
-
-If your system has multiple Python versions, use the matching launcher:
+Install Python dependencies:
 
 ```bash
 python -m pip install PySide6 ipgeolocation
@@ -32,7 +50,7 @@ python -m pip install PySide6 ipgeolocation
 
 On Linux, make sure a desktop session and Qt platform dependencies are available. On minimal server images, PySide6 may need additional system packages for X11 or Wayland.
 
-## Configuration
+### Configuration
 
 Create a local `.env` file from the example:
 
@@ -64,7 +82,7 @@ Variables:
 
 Keep `.env` private. It contains your API key and should not be committed.
 
-## Run
+### Run
 
 From the project directory:
 
