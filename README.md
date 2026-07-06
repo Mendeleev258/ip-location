@@ -102,7 +102,7 @@ macOS / Linux:
 python3 main.py
 ```
 
-Use `Search` to look up the IP from the input field. Use `Refresh` to update the currently displayed location data while the app is running. If the input field is empty, refresh detects the current public IP again.
+Use `Search` to look up the IP from the input field. Use `Refresh` to detect the current public IP again and update the location data while the app is running.
 
 ## Cross-Platform Notes
 

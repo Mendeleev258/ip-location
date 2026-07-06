@@ -473,7 +473,7 @@ class IpLocationWindow(QMainWindow):
             self.lookup_current_ip()
 
     def refresh_lookup(self):
-        self.submit_lookup()
+        self.lookup_current_ip()
 
     def lookup_current_ip(self):
         self.set_loading(True)
