@@ -106,6 +106,33 @@ QPushButton#PrimaryButton:disabled {
     color: {subtext0};
 }
 
+QPushButton#SecondaryButton {
+    background: {surface0};
+    border: 1px solid {surface1};
+    border-radius: 8px;
+    color: {text};
+    font-size: 15px;
+    font-weight: 800;
+    min-height: 45px;
+    min-width: 122px;
+    padding: 0 18px;
+}
+
+QPushButton#SecondaryButton:hover {
+    border-color: {sapphire};
+    color: {sapphire};
+}
+
+QPushButton#SecondaryButton:pressed {
+    background: {surface1};
+}
+
+QPushButton#SecondaryButton:disabled {
+    background: {surface0};
+    border-color: {surface0};
+    color: {overlay1};
+}
+
 QFrame#HeroResult {
     background: {crust};
     border-color: {surface1};

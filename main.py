@@ -1,6 +1,7 @@
 import os
 import sys
 from dataclasses import dataclass
+from datetime import datetime
 from ipaddress import ip_address as validate_ip_address
 from urllib.request import urlopen
 
@@ -311,7 +312,7 @@ class IpLocationWindow(QMainWindow):
         self.cards = {}
 
         self.setWindowTitle("IP Location")
-        self.setMinimumSize(520, 840)
+        self.setMinimumSize(600, 840)
         self.resize(700, 860)
 
         self.setCentralWidget(self.build_ui())
@@ -379,8 +380,14 @@ class IpLocationWindow(QMainWindow):
         self.lookup_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.lookup_button.clicked.connect(self.submit_lookup)
 
+        self.refresh_button = QPushButton("Refresh")
+        self.refresh_button.setObjectName("SecondaryButton")
+        self.refresh_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.refresh_button.clicked.connect(self.refresh_lookup)
+
         search_layout.addLayout(input_wrap, 1)
         search_layout.addWidget(self.lookup_button, 0, Qt.AlignmentFlag.AlignBottom)
+        search_layout.addWidget(self.refresh_button, 0, Qt.AlignmentFlag.AlignBottom)
 
         hero = QFrame()
         hero.setObjectName("HeroResult")
@@ -428,17 +435,17 @@ class IpLocationWindow(QMainWindow):
             else:
                 grid.addWidget(card, row, col)
 
-        footer = QLabel(
+        self.footer = QLabel(
             "Location data is approximate and depends on the provider's IP registry records."
         )
-        footer.setObjectName("Footer")
+        self.footer.setObjectName("Footer")
 
         page.addLayout(top_row)
         page.addWidget(search_panel)
         page.addWidget(hero)
         page.addLayout(grid)
         page.addItem(QSpacerItem(1, 1, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
-        page.addWidget(footer)
+        page.addWidget(self.footer)
 
         return root
 
@@ -448,6 +455,9 @@ class IpLocationWindow(QMainWindow):
             self.lookup_ip(ip_address)
         else:
             self.lookup_current_ip()
+
+    def refresh_lookup(self):
+        self.submit_lookup()
 
     def lookup_current_ip(self):
         self.set_loading(True)
@@ -481,13 +491,16 @@ class IpLocationWindow(QMainWindow):
 
     def set_loading(self, is_loading: bool):
         self.lookup_button.setDisabled(is_loading)
+        self.refresh_button.setDisabled(is_loading)
         self.ip_input.setDisabled(is_loading)
         if is_loading:
             self.lookup_button.setText("Searching...")
+            self.refresh_button.setText("Refreshing...")
             self.status_badge.setText("Loading")
             self.status_badge.setProperty("state", "loading")
         else:
             self.lookup_button.setText("Search")
+            self.refresh_button.setText("Refresh")
             self.status_badge.setProperty("state", "ready")
         self.status_badge.style().unpolish(self.status_badge)
         self.status_badge.style().polish(self.status_badge)
@@ -510,6 +523,10 @@ class IpLocationWindow(QMainWindow):
         self.cards["coordinates"].set_value(format_coordinates(result.latitude, result.longitude))
         self.cards["isp"].set_value(result.isp)
         self.cards["organization"].set_value(result.organization)
+        self.footer.setText(
+            "Location data is approximate and depends on the provider's IP registry records. "
+            f"Last updated: {datetime.now().strftime('%H:%M:%S')}."
+        )
 
     @Slot(str)
     def show_error(self, message: str):
