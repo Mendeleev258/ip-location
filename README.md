@@ -18,7 +18,7 @@ For Windows, download the release archive from GitHub Releases:
 1. Download `IP-Location-Windows.zip`.
 2. Extract the archive to any local folder.
 3. Open `.env` in the extracted `IP Location` folder.
-4. Set your `IPGEOLOCATION_API_KEY`.
+4. Set your `IPGEOLOCATION_API_KEY`. You can get an API key at <https://app.ipgeolocation.io/signup>.
 5. Run `IP Location.exe`.
 
 The extracted folder must stay together. The executable depends on `_internal/`, `.env`, and `style.qss` located next to it.
@@ -39,7 +39,7 @@ Use this path if you want to run or modify the Python source code.
 
 - Python 3.10 or newer
 - Internet access
-- An `ipgeolocationio` API key
+- An `ipgeolocationio` API key from <https://app.ipgeolocation.io/signup>
 - System support for Qt/PySide6 desktop windows
 
 Install Python dependencies:
@@ -66,7 +66,7 @@ macOS / Linux:
 cp example.env .env
 ```
 
-Then open `.env` and set your API key:
+Then open `.env` and set your API key. You can get one at <https://app.ipgeolocation.io/signup>:
 
 ```env
 IPGEOLOCATION_API_KEY=your_api_key_here

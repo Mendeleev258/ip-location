@@ -18,7 +18,7 @@
 1. Скачайте `IP-Location-Windows.zip`.
 2. Распакуйте архив в любую локальную папку.
 3. Откройте `.env` в распакованной папке `IP Location`.
-4. Укажите свой `IPGEOLOCATION_API_KEY`.
+4. Укажите свой `IPGEOLOCATION_API_KEY`. Получить API-ключ можно здесь: <https://app.ipgeolocation.io/signup>.
 5. Запустите `IP Location.exe`.
 
 Папку после распаковки нужно держать целиком. Исполняемый файл использует `_internal/`, `.env` и `style.qss`, которые лежат рядом с ним.
@@ -39,7 +39,7 @@ FLAG_IMAGE_ENDPOINT_TEMPLATE=https://flagcdn.com/w80/{country_code}.png
 
 - Python 3.10 или новее
 - Доступ в интернет
-- API-ключ `ipgeolocationio`
+- API-ключ `ipgeolocationio` с <https://app.ipgeolocation.io/signup>
 - Поддержка десктопных окон Qt/PySide6 в системе
 
 Установите Python-зависимости:
@@ -66,7 +66,7 @@ macOS / Linux:
 cp example.env .env
 ```
 
-Затем откройте `.env` и укажите свой API-ключ:
+Затем откройте `.env` и укажите свой API-ключ. Получить его можно здесь: <https://app.ipgeolocation.io/signup>:
 
 ```env
 IPGEOLOCATION_API_KEY=your_api_key_here
