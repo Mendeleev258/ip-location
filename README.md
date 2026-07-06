@@ -1,5 +1,12 @@
 # IP Location
 
+<p align="center">
+  <strong>Language:</strong>
+  <a href="README.md">English</a>
+  |
+  <a href="README.ru.md">Русский</a>
+</p>
+
 Desktop application for looking up an IP address location with a PySide6 interface styled with the Catppuccin Mocha palette.
 
 The app detects the current public IP on startup, sends it to `ipgeolocationio`, and displays location, timezone, ISP, organization, coordinates, and a country flag when available.
