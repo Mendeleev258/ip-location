@@ -9,8 +9,8 @@ from ipgeolocation import (
     IpGeolocationClientConfig,
     LookupIpGeolocationRequest,
 )
-from PySide6.QtCore import QObject, QRunnable, Qt, QThreadPool, Signal, Slot
-from PySide6.QtGui import QFont
+from PySide6.QtCore import QObject, QRunnable, QSize, Qt, QThreadPool, Signal, Slot
+from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
     QFrame,
@@ -31,6 +31,7 @@ ENV_FILE = ".env"
 STYLE_FILE = "style.qss"
 API_KEY_ENV_NAME = "IPGEOLOCATION_API_KEY"
 CURRENT_IP_ENDPOINT_ENV_NAME = "CURRENT_IP_ENDPOINT"
+FLAG_IMAGE_ENDPOINT_TEMPLATE_ENV_NAME = "FLAG_IMAGE_ENDPOINT_TEMPLATE"
 
 
 class Mocha:
@@ -63,6 +64,8 @@ class Mocha:
 class LocationResult:
     ip: str
     country: str
+    country_code: str
+    flag_image: bytes | None
     region: str
     city: str
     latitude: str
@@ -93,7 +96,9 @@ class LookupWorker(QRunnable):
                 response = client.lookup_ip_geolocation(
                     LookupIpGeolocationRequest(ip=target_ip)
                 )
-            self.signals.finished.emit(parse_response(response.data))
+            result = parse_response(response.data)
+            result.flag_image = fetch_flag_image(result.country_code)
+            self.signals.finished.emit(result)
         except Exception as exc:
             self.signals.failed.emit(str(exc))
 
@@ -131,6 +136,10 @@ def get_current_ip_endpoint() -> str:
     return endpoint
 
 
+def get_flag_image_endpoint_template() -> str:
+    return os.getenv(FLAG_IMAGE_ENDPOINT_TEMPLATE_ENV_NAME, "").strip()
+
+
 def resolve_current_public_ip() -> str:
     with urlopen(get_current_ip_endpoint(), timeout=8) as response:
         current_ip = response.read().decode("utf-8").strip()
@@ -149,10 +158,56 @@ def nested_value(source, path, default="Not available"):
     return str(value)
 
 
+def first_nested_value(source, paths, default="Not available"):
+    for path in paths:
+        value = nested_value(source, path, default="")
+        if value:
+            return value
+    return default
+
+
+def is_country_code(country_code: str) -> bool:
+    code = country_code.strip().upper()
+    return len(code) == 2 and code.isalpha()
+
+
+def fetch_flag_image(country_code: str) -> bytes | None:
+    if not is_country_code(country_code):
+        return None
+
+    endpoint_template = get_flag_image_endpoint_template()
+    if not endpoint_template:
+        return None
+
+    flag_url = endpoint_template.format(country_code=country_code.lower())
+    try:
+        with urlopen(flag_url, timeout=8) as response:
+            return response.read()
+    except Exception:
+        return None
+
+
+def format_country(country: str) -> str:
+    if country == "Not available":
+        return "Not available"
+    return country
+
+
 def parse_response(data) -> LocationResult:
+    country_code = first_nested_value(
+        data,
+        [
+            ["location", "country_code2"],
+            ["location", "country_code"],
+            ["location", "country_iso_code"],
+            ["location", "country_iso_code2"],
+        ],
+    )
     return LocationResult(
         ip=nested_value(data, ["ip"]),
         country=nested_value(data, ["location", "country_name"]),
+        country_code=country_code,
+        flag_image=None,
         region=nested_value(data, ["location", "state_prov"]),
         city=nested_value(data, ["location", "city"]),
         latitude=nested_value(data, ["location", "latitude"]),
@@ -200,11 +255,23 @@ class InfoCard(QFrame):
         self.value_label.setObjectName("CardValue")
         self.value_label.setWordWrap(True)
 
+        self.icon_label = QLabel()
+        self.icon_label.setObjectName("FlagImage")
+        self.icon_label.setFixedSize(QSize(34, 24))
+        self.icon_label.setScaledContents(False)
+        self.icon_label.hide()
+
+        value_row = QHBoxLayout()
+        value_row.setContentsMargins(0, 0, 0, 0)
+        value_row.setSpacing(10)
+        value_row.addWidget(self.icon_label, 0, Qt.AlignmentFlag.AlignTop)
+        value_row.addWidget(self.value_label, 1)
+
         content = QVBoxLayout()
         content.setContentsMargins(14, 13, 14, 13)
         content.setSpacing(5)
         content.addWidget(self.title_label)
-        content.addWidget(self.value_label)
+        content.addLayout(value_row)
 
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -214,6 +281,27 @@ class InfoCard(QFrame):
 
     def set_value(self, value: str):
         self.value_label.setText(value or "Not available")
+
+    def set_icon_image(self, image_data: bytes | None):
+        if not image_data:
+            self.icon_label.clear()
+            self.icon_label.hide()
+            return
+
+        pixmap = QPixmap()
+        if not pixmap.loadFromData(image_data):
+            self.icon_label.clear()
+            self.icon_label.hide()
+            return
+
+        self.icon_label.setPixmap(
+            pixmap.scaled(
+                self.icon_label.size(),
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+        )
+        self.icon_label.show()
 
 
 class IpLocationWindow(QMainWindow):
@@ -414,7 +502,8 @@ class IpLocationWindow(QMainWindow):
         summary_parts = [part for part in [result.city, result.region, result.country] if part != "Not available"]
         self.location_summary.setText(" / ".join(summary_parts) or "No location details returned.")
 
-        self.cards["country"].set_value(result.country)
+        self.cards["country"].set_value(format_country(result.country))
+        self.cards["country"].set_icon_image(result.flag_image)
         self.cards["city"].set_value(result.city)
         self.cards["region"].set_value(result.region)
         self.cards["timezone"].set_value(result.timezone)
