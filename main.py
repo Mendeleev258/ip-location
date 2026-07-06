@@ -312,7 +312,7 @@ class IpLocationWindow(QMainWindow):
 
         self.setWindowTitle("IP Location")
         self.setMinimumSize(520, 840)
-        self.resize(980, 860)
+        self.resize(700, 860)
 
         self.setCentralWidget(self.build_ui())
         self.apply_styles()
