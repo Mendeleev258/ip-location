@@ -1,0 +1,140 @@
+QWidget#Root {
+    background: {base};
+    color: {text};
+    font-family: "Segoe UI", "Inter", "Arial";
+    font-size: 14px;
+}
+
+QLabel#Eyebrow {
+    color: {sapphire};
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0px;
+}
+
+QLabel#Title {
+    color: {text};
+    font-size: 34px;
+    font-weight: 800;
+}
+
+QLabel#Subtitle {
+    color: {subtext0};
+    font-size: 14px;
+}
+
+QLabel#StatusBadge {
+    background: {surface0};
+    border: 1px solid {surface1};
+    border-radius: 14px;
+    color: {green};
+    font-size: 12px;
+    font-weight: 800;
+    min-width: 92px;
+    padding: 8px 12px;
+}
+
+QLabel#StatusBadge[state="loading"] {
+    color: {yellow};
+    border-color: {yellow};
+}
+
+QLabel#StatusBadge[state="error"] {
+    color: {red};
+    border-color: {red};
+}
+
+QFrame#SearchPanel,
+QFrame#HeroResult,
+QFrame#InfoCard {
+    background: {mantle};
+    border: 1px solid {surface0};
+    border-radius: 8px;
+}
+
+QLabel#InputLabel,
+QLabel#HeroCaption,
+QLabel#CardTitle {
+    color: {overlay1};
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0px;
+}
+
+QLineEdit#IpInput {
+    background: {crust};
+    border: 1px solid {surface1};
+    border-radius: 8px;
+    color: {text};
+    font-size: 18px;
+    min-height: 44px;
+    padding: 0 14px;
+    selection-background-color: {mauve};
+    selection-color: {crust};
+}
+
+QLineEdit#IpInput:focus {
+    border-color: {sapphire};
+}
+
+QLineEdit#IpInput:disabled {
+    color: {overlay1};
+}
+
+QPushButton#PrimaryButton {
+    background: {mauve};
+    border: 0;
+    border-radius: 8px;
+    color: {crust};
+    font-size: 15px;
+    font-weight: 800;
+    min-height: 45px;
+    min-width: 122px;
+    padding: 0 20px;
+}
+
+QPushButton#PrimaryButton:hover {
+    background: {lavender};
+}
+
+QPushButton#PrimaryButton:pressed {
+    background: {sapphire};
+}
+
+QPushButton#PrimaryButton:disabled {
+    background: {surface2};
+    color: {subtext0};
+}
+
+QFrame#HeroResult {
+    background: {crust};
+    border-color: {surface1};
+}
+
+QLabel#IpResult {
+    color: {rosewater};
+    font-size: 42px;
+    font-weight: 800;
+}
+
+QLabel#LocationSummary {
+    color: {subtext1};
+    font-size: 15px;
+}
+
+QFrame#AccentLine {
+    border: 0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+QLabel#CardValue {
+    color: {text};
+    font-size: 18px;
+    font-weight: 700;
+}
+
+QLabel#Footer {
+    color: {overlay1};
+    font-size: 12px;
+}
